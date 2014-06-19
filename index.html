@@ -10,31 +10,30 @@
     <script>
         // 소켓 이벤트를 수행합니다.
         var socket = io.connect('http://127.0.0.1:9001');
-        // 이벤트를 연결합니다.
-        socket.on('reserve', function (data) {
+        socket.on('reserve', function(){
 
         });
     </script>
     <!-- 초기 좌석 생성 -->
     <script>
         $(document).ready(function(){
+            //Test
             $('#addProduct').on('click', function(){
                 socket.emit('reserve', {
                     name : 'Hi'
                 });
+                $(this).parent().remove();
+                $('#listview').listview('refresh');
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Ajax를 수행합니다.
+
+            //Ajax 수
             $.getJSON('/reserved', { dummy: new Date().getTime() }, function (data) {
                 // 좌석을 생성합니다.
                 $.each(data, function (index, element) {
                     // 문서 객체를 생성합니다.
-                    var $product = $('<div></div>').addClass('line');
+                    var $product = $('<li></li>').append("<a><h3>" + element.name + "</h3></a>").addClass('product');
                     // 문서 객체를 추가합니다.
-                    $product.appendTo('body');
+                    $product.appendTo('#listview');
                 });
             });
         });
@@ -50,7 +49,7 @@
         <ul id="listview" data-role="listview" data-inset="true" >
         <li data-role="list-divider"></li>
         <% reservedList.forEach(function (item, index) { %>
-        <li class="product" data-index="<%= item.index %>">
+        <li class="product">
             <a href="#">
                 <h3><%= item.name %></h3>
             </a>

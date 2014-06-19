@@ -5,11 +5,12 @@ var socketio = require('socket.io');
 var ejs = require('ejs');
 var fs = require('fs');
 
-// 변수를 선언합니다.
+// 생성자 선언합니다.
 function Product(name) {
     this.name = name;
 }
 
+//더미데이터 집어넣음
 var reservedList = [
     new Product('JavaScript'),
     new Product('JavaScript'),
@@ -17,11 +18,12 @@ var reservedList = [
     new Product('JavaScript')
 ];
 
+//서버 실행
 var app = express();
 var server = http.Server(app);
 var indexPage = fs.readFileSync('index.html', 'utf8');
 
-// 웹 서버를 생성합니다.
+//라우트
 app.get('/', function (request, response) {
     fs.readFile('index.html', function (error, data) {
         response.writeHead(200, { 'Content-Type': 'text/html' });
@@ -44,7 +46,7 @@ io.sockets.on('connection', function (socket) {
     // reserve 이벤트
     socket.on('reserve', function (data) {
         reservedList.push(new Product(data.name));
-        io.sockets.emit('reserve', data);
+        io.sockets.emit('reserve');
     });
 });
 
