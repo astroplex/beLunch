@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css"/>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- 소켓 생성 -->
+    <script>
+        // 소켓 이벤트를 수행합니다.
+        var socket = io.connect('http://127.0.0.1:9001');
+        // 이벤트를 연결합니다.
+        socket.on('reserve', function (data) {
+
+        });
+    </script>
+    <!-- 초기 좌석 생성 -->
+    <script>
+        $(document).ready(function(){
+            $('#addProduct').on('click', function(){
+                socket.emit('reserve', {
+                    name : 'Hi'
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Ajax를 수행합니다.
+            $.getJSON('/reserved', { dummy: new Date().getTime() }, function (data) {
+                // 좌석을 생성합니다.
+                $.each(data, function (index, element) {
+                    // 문서 객체를 생성합니다.
+                    var $product = $('<div></div>').addClass('line');
+                    // 문서 객체를 추가합니다.
+                    $product.appendTo('body');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div data-role="page">
+    <div data-role="header">
+        <h1>beLunch</h1>
+    </div>
+    <div data-role="content">
+        <button id="addProduct">ADD</button>
+        <ul id="listview" data-role="listview" data-inset="true" >
+        <li data-role="list-divider"></li>
+        <% reservedList.forEach(function (item, index) { %>
+        <li class="product" data-index="<%= item.index %>">
+            <a href="#">
+                <h3><%= item.name %></h3>
+            </a>
+        </li>
+        <% }); %>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
