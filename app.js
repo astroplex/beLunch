@@ -12,16 +12,18 @@ function Product(name) {
 
 //더미데이터 집어넣음
 var reservedList = [
-    new Product('JavaScript'),
-    new Product('JavaScript'),
-    new Product('JavaScript'),
-    new Product('JavaScript')
+    new Product('1'),
+    new Product('2'),
+    new Product('3'),
+    new Product('4')
 ];
 
 //서버 실행
 var app = express();
 var server = http.Server(app);
 var indexPage = fs.readFileSync('index.html', 'utf8');
+
+app.use("/css", express.static(__dirname + '/css'));
 
 //라우트
 app.get('/', function (request, response) {
@@ -46,7 +48,12 @@ io.sockets.on('connection', function (socket) {
     // reserve 이벤트
     socket.on('reserve', function (data) {
         reservedList.push(new Product(data.name));
-        io.sockets.emit('reserve');
+        io.sockets.emit('drawlist');
+    });
+    socket.on('delete', function (data) {
+        reservedList.splice(data.number, data.number + 1);
+        console.log(reservedList);
+        io.sockets.emit('drawlist');
     });
 });
 

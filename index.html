@@ -3,38 +3,66 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <!-- 소켓 생성 -->
-    <script>
-        // 소켓 이벤트를 수행합니다.
-        var socket = io.connect('http://127.0.0.1:9001');
-        socket.on('reserve', function(){
-            $('#listview').find('.product').remove();
-
-            //Ajax 수행
-            $.getJSON('/reserved', { dummy: new Date().getTime() }, function (data) {
-                // 좌석을 생성합니다.
-                $.each(data, function (index, element) {
-                    // 문서 객체를 생성합니다.
-                    var $product = $('<li></li>').append("<a><h3>" + element.name + "</h3></a>").addClass('product list-group-item');
-                    // 문서 객체를 추가합니다.
-                    $product.appendTo('#listview');
-                });
-            });
-        });
-    </script>
-    <!-- 초기 좌석 생성 -->
     <script>
         $(document).ready(function(){
-            //Test
             $('#addProduct').on('click', function(){
-                socket.emit('reserve', {
-                    name : 'Hi'
+                if(inputName.value){
+                    socket.emit('reserve', {
+                        name : inputName.value
+                    });
+                }else{
+                    alert("이름을 입력해 주세요.");
+                }
+            });
+
+            var selectedProductName = "";
+            var selectedProductNumber = "";
+            $('.product').on('click', function(){
+                selectedProductName = $(this).find('.productName').html();
+                selectedProductNumber = $(this).find('.productNumber').html() - 1;
+            });
+
+            $('#delteModal').on('show.bs.modal', function (e) {
+                $('#modalLabel').html(selectedProductName);
+            });
+
+            $('#deleteBtn').on('click', function(){
+                socket.emit('delete', {
+                    number : selectedProductNumber
                 });
             });
-        });
+
+            function drawList(){
+                //Ajax 수행
+                $.getJSON('/reserved', { dummy: new Date().getTime() }, function (data) {
+                    var count = 1;
+
+                    // 좌석을 생성합니다.
+                    $.each(data, function (index, element) {
+                        // 문서 객체를 생성합니다.
+                        var $product = $('<li></li>').append("<a data-toggle='modal' data-target='#delteModal'><h3>" + "<span class='productNumber'>" + count + "</span>" + ". "
+                                + "<span class='productName'>" + element.name + "</span>"
+                                + "</h3></a>").addClass('product list-group-item');
+
+                        // 문서 객체를 추가합니다.
+                        $product.appendTo('#listview');
+
+                        count = count + 1;
+                    });
+                });
+            }
+
+            // 소켓 이벤트를 수행합니다.
+            var socket = io.connect('http://127.0.0.1:9001');
+            socket.on('drawlist', function(){
+                $('#listview').find('.product').remove();
+                drawList();
+            });
+        })
     </script>
 </head>
 <body>
@@ -43,16 +71,31 @@
         <h1>beLunch</h1>
     </div>
     <div>
-        <button id="addProduct">ADD</button>
-        <ul id="listview" class="list-group" >
+        <input id="inputName" type="text" class="form-control" placeholder="냠냠" autofocus="">
+        <button id="addProduct" type="button" class="btn btn-default btn-block btn-lg">ADD</button>
+        <ol id="listview" class="list-group" >
         <% reservedList.forEach(function (item, index) { %>
         <li class="product list-group-item">
-            <a href="#">
-                <h3><%= item.name %></h3>
-            </a>
+            <a href="#" data-toggle="modal" data-target="#delteModal">
+        <h3><span class="productNumber"><%= (index + 1) + ". " %></span><span class="productName"><%= item.name %></span></h3>
+        </a>
         </li>
         <% }); %>
-        </ul>
+        </ol>
+        <div class="callWrap"><a href="tel:010-9197-0901" id="callBtn">CALL</a></div>
+    </div>
+    <div class="modal fade" id="delteModal" tabindex="-1" role="dialog" aria-labelled="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="deleteBtn" type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
