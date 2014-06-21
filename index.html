@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <!-- 소켓 생성 -->
     <script>
@@ -18,10 +18,9 @@
                 // 좌석을 생성합니다.
                 $.each(data, function (index, element) {
                     // 문서 객체를 생성합니다.
-                    var $product = $('<li></li>').append("<a><h3>" + element.name + "</h3></a>").addClass('product');
+                    var $product = $('<li></li>').append("<a><h3>" + element.name + "</h3></a>").addClass('product list-group-item');
                     // 문서 객체를 추가합니다.
                     $product.appendTo('#listview');
-                    $('#listview').listview('refresh');
                 });
             });
         });
@@ -39,16 +38,15 @@
     </script>
 </head>
 <body>
-<div data-role="page">
-    <div data-role="header">
+<div>
+    <div>
         <h1>beLunch</h1>
     </div>
-    <div data-role="content">
+    <div>
         <button id="addProduct">ADD</button>
-        <ul id="listview" data-role="listview" data-inset="true" >
-        <li data-role="list-divider"></li>
+        <ul id="listview" class="list-group" >
         <% reservedList.forEach(function (item, index) { %>
-        <li class="product">
+        <li class="product list-group-item">
             <a href="#">
                 <h3><%= item.name %></h3>
             </a>
