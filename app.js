@@ -13,10 +13,7 @@ function Product(productName, userName) {
 
 //더미데이터 집어넣음
 var reservedList = [
-    new Product('1', '4'),
-    new Product('2', '3'),
-    new Product('3', '2'),
-    new Product('4', '1')
+
 ];
 
 //서버 실행
@@ -68,5 +65,5 @@ io.sockets.on('connection', function (socket) {
 
 // 서버를 실행합니다.
 server.listen(9001, function () {
-    console.log('Server Running at http://127.0.0.1:9001');
+    console.log('Server Running at 9001');
 });
