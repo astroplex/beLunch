@@ -6,16 +6,17 @@ var ejs = require('ejs');
 var fs = require('fs');
 
 // 생성자 선언합니다.
-function Product(name) {
-    this.name = name;
+function Product(productName, userName) {
+    this.productName = productName;
+    this.userName = userName;
 }
 
 //더미데이터 집어넣음
 var reservedList = [
-    new Product('1'),
-    new Product('2'),
-    new Product('3'),
-    new Product('4')
+    new Product('1', '4'),
+    new Product('2', '3'),
+    new Product('3', '2'),
+    new Product('4', '1')
 ];
 
 //서버 실행
@@ -47,12 +48,20 @@ io.set('log level', 2);
 io.sockets.on('connection', function (socket) {
     // reserve 이벤트
     socket.on('reserve', function (data) {
-        reservedList.push(new Product(data.name));
+        reservedList.push(new Product(data.productName, data.userName));
+        reservedList.sort(function (a, b) {
+            if (a.productName > b.productName)
+                return 1;
+            if (a.productName < b.productName)
+                return -1;
+            // a must be equal to b
+            return 0;
+        });
+
         io.sockets.emit('drawlist');
     });
     socket.on('delete', function (data) {
-        reservedList.splice(data.number, data.number + 1);
-        console.log(reservedList);
+        reservedList.splice(data.number, 1);
         io.sockets.emit('drawlist');
     });
 });

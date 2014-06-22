@@ -1,9 +1,13 @@
 h1{margin-left:10px;color:#999}
-#productName{border-radius:0 !important;}
 #addProduct{margin-top:-1px;border-radius:0 !important;}
 #listview{margin-top:10px}
 #listview li{border-radius:0}
 #listview li a{display:block}
-#listview .list-group-item{}
+.inputwrap:after{display:block;clear:both;content:''}
+#inputProduct{float:left;width:70%;border-radius:0}
+#inputUser{width:30%;border-radius:0}
+.productnumber:after{display:inline-block;content:'.'}
+.productname{margin-left:10px}
+.productname:after{display:inline-block;margin:0 10px;content:'-'}
 .callWrap{text-align:center}
 #callBtn {display:inline-block;width:80px;height:80px;line-height:80px;border: 2px solid #f5f5f5;border-radius: 50%;color:#fff;text-align:center;text-decoration:none;background: #00FF00;font-size:15px;font-weight:bold}

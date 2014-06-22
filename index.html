@@ -10,20 +10,21 @@
     <script>
         $(document).ready(function(){
             $('#addProduct').on('click', function(){
-                if(inputName.value){
+                if(inputProduct.value && inputUser.value){
                     socket.emit('reserve', {
-                        name : inputName.value
+                        productName : inputProduct.value,
+                        userName : inputUser.value
                     });
                 }else{
-                    alert("이름을 입력해 주세요.");
+                    alert("빈칸을 채워 주세요.");
                 }
             });
 
             var selectedProductName = "";
             var selectedProductNumber = "";
-            $('.product').on('click', function(){
-                selectedProductName = $(this).find('.productName').html();
-                selectedProductNumber = $(this).find('.productNumber').html() - 1;
+            $('body').delegate('.product', 'click', function(){
+                selectedProductName = $(this).find('.productname').html();
+                selectedProductNumber = $(this).find('.productnumber').html() - 1;
             });
 
             $('#delteModal').on('show.bs.modal', function (e) {
@@ -44,8 +45,9 @@
                     // 좌석을 생성합니다.
                     $.each(data, function (index, element) {
                         // 문서 객체를 생성합니다.
-                        var $product = $('<li></li>').append("<a data-toggle='modal' data-target='#delteModal'><h3>" + "<span class='productNumber'>" + count + "</span>" + ". "
-                                + "<span class='productName'>" + element.name + "</span>"
+                        var $product = $('<li></li>').append("<a href='#' data-toggle='modal' data-target='#delteModal'><h3>" + "<span class='productnumber'>" + count + "</span>"
+                                + "<span class='productname'>" + element.productName + "</span>"
+                                + "<span class='username'>" + element.userName + "</span>"
                                 + "</h3></a>").addClass('product list-group-item');
 
                         // 문서 객체를 추가합니다.
@@ -71,18 +73,21 @@
         <h1>beLunch</h1>
     </div>
     <div>
-        <input id="inputName" type="text" class="form-control" placeholder="냠냠" autofocus="">
+        <div class="inputwrap">
+            <input id="inputProduct" type="text" class="form-control" placeholder="Product" autofocus="">
+            <input id="inputUser" type="text" class="form-control" placeholder="User" autofocus="">
+        </div>
         <button id="addProduct" type="button" class="btn btn-default btn-block btn-lg">ADD</button>
         <ol id="listview" class="list-group" >
         <% reservedList.forEach(function (item, index) { %>
         <li class="product list-group-item">
             <a href="#" data-toggle="modal" data-target="#delteModal">
-        <h3><span class="productNumber"><%= (index + 1) + ". " %></span><span class="productName"><%= item.name %></span></h3>
-        </a>
+            <h3><span class="productnumber"><%= (index + 1) %></span><span class="productname"><%= item.productName %></span><span class="username"><%= item.userName %></span></h3>
+            </a>
         </li>
         <% }); %>
         </ol>
-        <div class="callWrap"><a href="tel:010-9197-0901" id="callBtn">CALL</a></div>
+        <div class="callWrap"><a href="tel:031-704-2013" id="callBtn">CALL</a></div>
     </div>
     <div class="modal fade" id="delteModal" tabindex="-1" role="dialog" aria-labelled="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
