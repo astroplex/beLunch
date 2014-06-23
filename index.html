@@ -4,13 +4,32 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,target-densitydpi=medium-dpi">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         $(document).ready(function(){
+            var productList = [
+                '그릴드 치킨 샐러드',
+                '스테이크 샐러드',
+                '훈제 연어 샐러드',
+                '리코타치즈 샐러드',
+                '진격의 샐러드',
+                '계절과일 샐러드',
+                '라이스오믈렛',
+                '가든오믈렛',
+                '칠리미트오믈렛',
+                '플레인오믈렛'
+            ];
+            
+            $( "#inputProduct" ).autocomplete({
+                source: productList
+            });
+            
             $('#addProduct').on('click', function(){
                 if(inputProduct.value && inputUser.value){
                     socket.emit('reserve', {
